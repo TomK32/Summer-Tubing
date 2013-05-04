@@ -1,0 +1,16 @@
+
+
+settings = {
+  android =
+   {
+    versionCode = "VERSION",
+    usesPermissions =
+    {
+
+    },
+    usesFeatures =
+    {
+     { name = "android.hardware.touchscreen", required = true}
+    },
+  },
+}

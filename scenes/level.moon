@@ -35,11 +35,17 @@ controls.paddle = (side, event) =>
     1
     -- animate
   elseif event.phase == 'ended'
-    paddle = math.abs(@slide_start[side] - event.y)
+    paddle = math.abs(@slide_start[side] - event.y) * 5
     if paddle > 0
       scene.player\paddle(side, paddle / @slide_height)
-    print(paddle, @slide_start['left'], @slide_start['right'])
     @slide_start[side] = nil
+
+scene.gameLoop = (event) ->
+  dt = 0.02
+  if not game.running
+    return
+  scene.player\update(dt)
+  true
 
 scene.debug = =>
   debug = display.newGroup()
@@ -63,9 +69,12 @@ scene.createScene = (event) =>
   controls\create()
   @view\insert(controls.group)
   @debug()
-  @view
+  timer.performWithDelay 1, -> Runtime\addEventListener("enterFrame", scene.gameLoop)
+  game.running = true
+  @
 
 scene.exitScene = (event) =>
+  game.running = false
   storyboard.purgeScene()
 
 scene\addEventListener( "exitScene", scene )

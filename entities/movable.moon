@@ -17,6 +17,7 @@ export class Movable
     elseif side == 'right'
       if @spin < 0
         @move(0, 1)
+      strength = -strength
     else
       assert(side, "left or right")
     @spin += strength / 2

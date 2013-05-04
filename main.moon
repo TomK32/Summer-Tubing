@@ -33,9 +33,6 @@ export game = {
   highscores: require('highscores')
   sounds: require('sounds')
 
-  getTimeRemaining: (now) ->
-    return now + 60000
-
   reset: ->
     game.running = true
     game.running_score = game.score

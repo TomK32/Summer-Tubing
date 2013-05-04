@@ -1,8 +1,6 @@
 
 sounds = {}
-sounds.music = {
-  audio.loadSound('sounds/level_start.mp3')
-}
+sounds.music = audio.loadSound('sounds/music_menu.mp3')
 
 sounds.play = (file) ->
   file = sounds[file]

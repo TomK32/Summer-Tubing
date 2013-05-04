@@ -5,6 +5,7 @@ scene = storyboard.newScene('Level')
 widget = require "widget"
 
 require 'entities.player'
+require 'entities.river'
 
 controls = {
   slide_width: math.max(10, display.contentWidth / 16)
@@ -48,22 +49,28 @@ scene.gameLoop = (event) ->
   true
 
 scene.debug = =>
-  debug = display.newGroup()
-  player = display.newText(@player\toString(), 5, 0)
+  if not @debug_group
+    @debug_group = display.newGroup()
   
-  debug\insert(player)
-  @view\insert(debug)
+    @debug_group.player = display.newText(@player\toString(), 5, 0)
+    @view\insert(@debug_group)
+  else
+    @debug_group.player.text = @player.toString()
 
 scene.createScene = (event) =>
   background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
   background\setFillColor(0,0,0,255)
   @view\insert(background)
 
+  @river_group = display.newGroup()
+  @river = River(@river_group, 1)
+  @view\insert(@river_group)
+
   @player_group = display.newGroup()
   @player = Player(@player_group)
-  @player_group.xScale, @player_group.yScale = 0.3, 0.3
+  @player_group.xScale, @player_group.yScale = 0.15, 0.15
   @player_group.x = display.contentWidth / 2 - (@player_group.contentWidth / 2)
-  @player_group.y = display.contentHeight - @player_group.contentHeight * 1.2
+  @player_group.y = 20
   @view\insert(@player_group)
 
   controls\create()

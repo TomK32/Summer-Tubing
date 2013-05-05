@@ -42,7 +42,7 @@ export game = {
 
 display.setStatusBar( display.HiddenStatusBar )
 
-game.sounds.play('music')
+game.sounds.play('music', {loops: -1})
 
 export storyboard = require "storyboard"
 storyboard.purgeOnSceneChange = true

@@ -12,16 +12,16 @@ require 'entities.river'
 controls = {
   slide_width: math.max(10, display.contentWidth / 8)
   slide_height: math.max(100, display.contentHeight / 4)
-  slides_y: display.contentHeight - 4
+  slides_y: display.contentHeight - 40
   slide_color: {200, 200, 200, 255}
-  group: display.newGroup()
   slide_start: {left: nil, right: nil}
 }
 
 controls.create = =>
-  left = display.newRect( 4, @slides_y - @slide_height, @slide_width, @slide_height)
+  @group = display.newGroup()
+  left = display.newRect( 8, @slides_y - @slide_height, @slide_width, @slide_height)
   left\setFillColor(255,255,255,255)
-  right = display.newRect( display.contentWidth - @slide_width - 4, @slides_y - @slide_height, @slide_width, @slide_height)
+  right = display.newRect( display.contentWidth - @slide_width - 8, @slides_y - @slide_height, @slide_width, @slide_height)
   right\setFillColor(unpack(@slide_color))
 
   @group\insert(left)
@@ -66,8 +66,7 @@ scene.enterFrame = (event) =>
     return
   scene.river\update(dt, scene.player.position)
 
-  if scene.debug_group
-    scene\debug()
+  --scene\debug()
 
   @updateScore()
 
@@ -89,20 +88,39 @@ scene.enterScene = (event) =>
   background\setFillColor(0,0,0,255)
   @view\insert(background)
 
+  header = math.min(32, display.contentHeight * 0.1)
+
+  @game_group = display.newGroup()
+  @game_group.y = header
+  @view\insert(@game_group)
+
   @river_group = display.newGroup()
   @river = River(@river_group, 1)
-  @view\insert(@river_group)
+  @game_group\insert(@river_group)
 
   @player_group = display.newGroup()
   @player_group\scale(@river.scale, @river.scale)
   @player = Player(@player_group, @river)
   @player_group.x = display.contentWidth / 2 - (@player_group.contentWidth / 2)
   @player_group.y = 20
-  @view\insert(@player_group)
+  @game_group\insert(@player_group)
 
   controls\create()
-  @view\insert(controls.group)
-  @debug()
+  @game_group\insert(controls.group)
+
+  -- header
+  background = display.newRect(0, 0, display.contentWidth, header)
+  background\setFillColor(0,0,0,255)
+  @view\insert(background)
+
+  margin = 0
+  restart_button = display.newImage('images/restart.png', margin, margin)
+  restart_button\scale(header / restart_button.height, header / restart_button.height)
+  restart_button.y = header / 2
+  restart_button.x = header / 2
+  @view\insert(restart_button)
+  restart_button\addEventListener('tap', -> storyboard.gotoScene('scenes.menu'))
+
   timer.performWithDelay 1, -> Runtime\addEventListener("enterFrame", scene)
   game.running = true
   @
@@ -112,7 +130,9 @@ scene.exitScene = (event) =>
   @river_group\removeSelf()
   if @debug_group
     @debug_group\removeSelf()
+    @debug_group = nil
   @score_text\removeSelf()
+  @score_text = nil
   @player_group\removeSelf()
   timer.performWithDelay 1, -> Runtime\removeEventListener("enterFrame", scene)
   storyboard.purgeScene()

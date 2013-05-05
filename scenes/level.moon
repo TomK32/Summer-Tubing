@@ -46,7 +46,7 @@ scene.gameLoop = (event) ->
   if not game.running
     return
   scene.player\update(dt)
-  scene.river\update(dt)
+  scene.river\update(dt, scene.player.position)
   if scene.debug_group
     scene\debug()
   true

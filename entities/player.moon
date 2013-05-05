@@ -26,7 +26,7 @@ export class Player extends Movable
     if @spin ~= 0
       @rotation += @spin * dt * 50
       @image\rotate(@spin * dt * 50)
-    @image.x = @position.x / 2
+    @group.x = @position.x
 
   toString: =>
     return 'x: ' .. math.floor(@position.x) .. ', y: ' .. math.floor(@position.y) .. ', rotation: ' .. math.floor(@rotation*10)/10 .. ', spin: ' .. math.floor(@spin*10)/10

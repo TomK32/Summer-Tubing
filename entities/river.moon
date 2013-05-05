@@ -18,12 +18,12 @@ export class River
 
     @
 
-  update: (dt) =>
-    @image.y -= dt * 10
+  update: (dt, position) =>
+    @image.y = @image.height / 2 - position.y
     @
 
   current: (x, y) =>
-    return({-0.1, 0.2})
+    return({x: -0.1, y: 0.2})
 
   collision: (x, y) =>
     y = math.ceil((y + 1) / @collision_map_scaleY)

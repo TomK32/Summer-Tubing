@@ -4,7 +4,6 @@ storyboard = require('storyboard')
 scene = storyboard.newScene('Level')
 widget = require "widget"
 
-font_size = math.min(32, math.floor(display.contentWidth * 0.1)) - 2
 debug_level = false
 
 require 'entities.player'
@@ -60,7 +59,7 @@ controls.touch = (event) =>
 scene.updateScore = =>
   if not @score_text
     -- create a score view, gets updated from enterFrame
-    @score_text = display.newText('', display.contentWidth, 0, native.systemFontBold, font_size)
+    @score_text = display.newText('', display.contentWidth, 0, native.systemFontBold, game.font_size)
     @view\insert(@score_text)
     @score_text\setReferencePoint(display.TopRightReferencePoint)
   @score_text.text = math.floor(@player.score)

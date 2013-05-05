@@ -2,7 +2,6 @@
 return {
   image = 'images/level_1.png',
   start = {x = 120, y = 20},
-  collision_mask = 'images/level_1_collision.png',
   effects = {
     white_water = {
       {x = 130, y = 210, width = 60},

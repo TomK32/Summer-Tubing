@@ -50,7 +50,8 @@ scene.updateScore = =>
     @view\insert(@score_text)
     @score_text\setReferencePoint(display.TopRightReferencePoint)
   @score_text.text = math.floor(@player.score)
-  @score_text.x = display.contentWidth - @score_text.width / 2
+  if @score_text.width
+    @score_text.x = display.contentWidth - @score_text.width / 2
 
 scene.enterFrame = (event) =>
   if not game.running
@@ -61,6 +62,7 @@ scene.enterFrame = (event) =>
   if scene.player.collided
     game.running = false
     storyboard.gotoScene('scenes.level')
+    return
   scene.river\update(dt, scene.player.position)
 
   if scene.debug_group
@@ -91,6 +93,7 @@ scene.enterScene = (event) =>
   @view\insert(@river_group)
 
   @player_group = display.newGroup()
+  @player_group\scale(@river.scale, @river.scale)
   @player = Player(@player_group, @river)
   @player_group.x = display.contentWidth / 2 - (@player_group.contentWidth / 2)
   @player_group.y = 20

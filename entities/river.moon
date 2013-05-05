@@ -10,9 +10,8 @@ export class River
     @start = @level.start
 
     @image = display.newImage(@group, @level.image, 0, 0, true)
-    scale = display.contentWidth / @image.width
-    @image\scale(scale, 1)
-    @image.x = math.floor(@image.contentWidth / 2)
+    @scale = display.contentWidth / @image.width
+    @group\scale(@scale, @scale)
 
     @collision_map = require 'levels.level' .. level .. '_collision'
     @collision_map_scaleX = @image.width / #@collision_map[1] * 0.9

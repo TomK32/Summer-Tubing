@@ -31,11 +31,11 @@ export class Player extends Movable
     else
       @collided = true
 
-    --@spin = @spin * dt
-    if math.abs(@spin) < dt
+    @spin = @spin * math.min(0.99, 1 - dt)
+    if math.abs(@spin) < 0.1
       @spin = 0
     if @spin ~= 0
-      spin = @spin * dt *  20
+      spin = @spin * 40 * dt
       @rotation = (@rotation + spin) % 360
       @image\rotate(spin)
     @group.x = @position.x

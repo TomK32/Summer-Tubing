@@ -29,10 +29,10 @@ scene.createScene = (event) =>
   if game.highscores.total_games
     y = @\printLine(game.highscores.total_games .. ' games', x, y, width, font_size)
   if game.highscores.total_score
-    y = @\printLine(game.highscores.total_score .. ' total score', x, y, width, font_size)
+    y = @\printLine(math.floor(game.highscores.total_score) .. ' total score', x, y, width, font_size)
 
   for i, score in ipairs(game.highscores.highscores)
-    text = math.floor(score.score) .. ' (lvl ' .. score.level .. ') .. ' .. score.date
+    text = math.floor(score.score) ..score ' .. ' .. score.date
     y = @\printLine(text, x, y, width, font_size)
 
   @view\addEventListener("touch", gotoMainMenu)

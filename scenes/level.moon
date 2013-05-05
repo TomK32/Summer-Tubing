@@ -61,6 +61,7 @@ scene.enterFrame = (event) =>
   scene.player\update(dt)
   if scene.player.collided
     game.running = false
+    game.highscores\insert({score: @player.score, date: os.date('%F')})
     storyboard.gotoScene('scenes.level')
     return
   scene.river\update(dt, scene.player.position)

@@ -21,28 +21,40 @@ controls = {
 controls.create = =>
   @group = display.newGroup()
   left = display.newRect( 8, @slides_y - @slide_height, @slide_width, @slide_height)
+  left.side = 'left'
+  left.touch = controls.touch
   left\setFillColor(255,255,255,255)
   right = display.newRect( display.contentWidth - @slide_width - 8, @slides_y - @slide_height, @slide_width, @slide_height)
+  right.side = 'right'
+  right.touch = controls.touch
   right\setFillColor(unpack(@slide_color))
 
   @group\insert(left)
   @group\insert(right)
 
   -- connect to player
-  left\addEventListener('touch', (event) -> @paddle('left', event))
-  right\addEventListener('touch', (event) -> @paddle('right', event))
+  left\addEventListener('touch', left)
+  right\addEventListener('touch', right)
 
-controls.paddle = (side, event) =>
-  if not @slide_start[side]
-    @slide_start[side] = event.y
+controls.touch = (event) =>
+  side = @side
+  if not controls.slide_start[side]
+    controls.slide_start[side] = event.y
   elseif event.phase == 'moved'
     1
     -- animate
   elseif event.phase == 'ended' or event.phase == 'cancelled'
-    paddle = math.abs(@slide_start[side] - event.y)
+    paddle = math.abs(controls.slide_start[side] - event.y)
     if paddle > 0
-      scene.player\paddle(side, paddle / @slide_height)
-    @slide_start[side] = nil
+      scene.player\paddle(side, paddle / controls.slide_height)
+      -- visual feedback about controls
+      @\setFillColor(unpack(controls.slide_color))
+      @transition = true
+      transition.from(@, {
+        time: math.min(500, paddle * 5),
+        alpha: 0
+      })
+    controls.slide_start[side] = nil
 
 scene.updateScore = =>
   if not @score_text

@@ -4,7 +4,7 @@ storyboard = require('storyboard')
 scene = storyboard.newScene('Level')
 widget = require "widget"
 
-font_size = math.max(16, math.floor(display.contentWidth / 16))
+font_size = math.min(32, math.floor(display.contentWidth * 0.1)) - 2
 debug_level = false
 
 require 'entities.player'
@@ -50,6 +50,7 @@ controls.touch = (event) =>
       -- visual feedback about controls
       @\setFillColor(unpack(controls.slide_color))
       @transition = true
+      @alpha = 1
       transition.from(@, {
         time: math.min(500, paddle * 5),
         alpha: 0

@@ -3,7 +3,7 @@ export json = require 'json'
 
 class Highscores
 
-  highscores_file: 'unstack2-highscores.txt'
+  highscores_file: 'highscores.txt'
   scores_to_keep: 10
 
   new: =>

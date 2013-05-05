@@ -1,6 +1,3 @@
---  Unstack2 Field
---
---  Copyright 2011-2013 Ananasblau.com. All rights reserved.
 
 scene = storyboard.newScene('HighScores')
 

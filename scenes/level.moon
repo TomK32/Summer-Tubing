@@ -8,7 +8,7 @@ require 'entities.player'
 require 'entities.river'
 
 controls = {
-  slide_width: math.max(10, display.contentWidth / 16)
+  slide_width: math.max(10, display.contentWidth / 8)
   slide_height: math.max(100, display.contentHeight / 4)
   slides_y: display.contentHeight - 4
   slide_color: {200, 200, 200, 255}
@@ -35,12 +35,10 @@ controls.paddle = (side, event) =>
   elseif event.phase == 'moved'
     1
     -- animate
-  elseif event.phase == 'ended'
-    paddle = math.abs(@slide_start[side] - event.y) * 5
+  elseif event.phase == 'ended' or event.phase == 'cancelled'
+    paddle = math.abs(@slide_start[side] - event.y)
     if paddle > 0
-      --scene.player\paddle(side, paddle / @slide_height)
-      scene.player\paddle('right', paddle / @slide_height / 10 )
-      scene.player\paddle('left', paddle / @slide_height / 9)
+      scene.player\paddle(side, paddle / @slide_height)
     @slide_start[side] = nil
 
 scene.gameLoop = (event) ->

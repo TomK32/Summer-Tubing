@@ -1,8 +1,8 @@
+
 --
--- Unstack2 main.lua
+-- Summer Tubing main.lua
 
-
-
+system.activate( "multitouch" )
 
 -- Commented out for contest
 --require 'lib.game_analytics'

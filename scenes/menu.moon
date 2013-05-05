@@ -1,6 +1,3 @@
---  Unstack2 Menu
---
---  Copyright 2011-2013 Ananasblau.com. All rights reserved.
 
 scene = storyboard.newScene('Menu')
 widget = require "widget"
@@ -34,7 +31,7 @@ scene.enterScene = (event) =>
     top: y,
     onRelease: ->
       analytics.newEvent("design", {event_id: "menu:visit_more_games"})
-      system.openURL( 'http://ananasblau.com/games?utm_source=unstack2&utm_medium=android&utm_term=main+menu&utm_campaign=games' )
+      system.openURL( 'http://ananasblau.com/games?utm_source=summertubing&utm_medium=android&utm_term=main+menu&utm_campaign=games' )
   })
   games_button.x = play_button.x
   y += games_button.height * 1.2

@@ -4,6 +4,8 @@ storyboard = require('storyboard')
 scene = storyboard.newScene('Level')
 widget = require "widget"
 
+font_size = math.max(16, math.floor(display.contentWidth / 16))
+
 require 'entities.player'
 require 'entities.river'
 
@@ -41,7 +43,16 @@ controls.paddle = (side, event) =>
       scene.player\paddle(side, paddle / @slide_height)
     @slide_start[side] = nil
 
-scene.enterFrame = (event) ->
+scene.updateScore = =>
+  if not @score_text
+    -- create a score view, gets updated from enterFrame
+    @score_text = display.newText('', display.contentWidth, 0, native.systemFontBold, font_size)
+    @view\insert(@score_text)
+    @score_text\setReferencePoint(display.TopRightReferencePoint)
+  @score_text.text = math.floor(@player.score)
+  @score_text.x = display.contentWidth - @score_text.width / 2
+
+scene.enterFrame = (event) =>
   if not game.running
     return
   dt = 0.02
@@ -51,8 +62,12 @@ scene.enterFrame = (event) ->
     game.running = false
     storyboard.gotoScene('scenes.level')
   scene.river\update(dt, scene.player.position)
+
   if scene.debug_group
     scene\debug()
+
+  @updateScore()
+
   true
 
 scene.debug = =>
@@ -93,6 +108,7 @@ scene.exitScene = (event) =>
   @river_group\removeSelf()
   if @debug_group
     @debug_group\removeSelf()
+  @score_text\removeSelf()
   @player_group\removeSelf()
   timer.performWithDelay 1, -> Runtime\removeEventListener("enterFrame", scene)
   storyboard.purgeScene()

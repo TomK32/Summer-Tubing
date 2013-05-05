@@ -11,6 +11,7 @@ export class Player extends Movable
     @rotation = 90
     @image\rotate(@rotation)
     @collided = false
+    @score = 0
     @
 
   create: =>
@@ -38,6 +39,7 @@ export class Player extends Movable
       @rotation = (@rotation + spin) % 360
       @image\rotate(spin)
     @group.x = @position.x
+    @score = math.max(@score, @position.y - @level.start.y)
     @
 
   toString: =>

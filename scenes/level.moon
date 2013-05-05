@@ -5,6 +5,7 @@ scene = storyboard.newScene('Level')
 widget = require "widget"
 
 font_size = math.max(16, math.floor(display.contentWidth / 16))
+debug_level = false
 
 require 'entities.player'
 require 'entities.river'
@@ -59,12 +60,34 @@ scene.enterFrame = (event) =>
   dt = 0.02
 
   scene.player\update(dt)
+  if scene.player.position.y >= @level.finish
+
+    game.highscores\insert({score: @player.score, date: os.date('%F')})
+    game.running = false
+
+    background = display.newRect(display.contentWidth * 0.05, display.contentHeight * 0.1, display.contentWidth * 0.9, display.contentHeight * 0.8)
+    background\setFillColor(0,0,0,200)
+    @view\insert(background)
+    menu_button = widget.newButton({
+      label: "Go To Menu",
+      labelColor: { default: {0}, over: {0} },
+      onRelease: (event) ->
+        storyboard.gotoScene("scenes.menu", "fade", 50)
+        analytics.newEvent("design", {event_id: "game:end"})
+        return true
+    })
+    @view\insert(menu_button)
+    menu_button.y = display.contentHeight * 0.4
+    menu_button.x = display.contentWidth / 2
+
+
+
   if scene.player.collided
     game.running = false
     game.highscores\insert({score: @player.score, date: os.date('%F')})
     storyboard.gotoScene('scenes.level')
     return
-  scene.river\update(dt, scene.player.position)
+  @level\update(dt, scene.player.position)
 
   --scene\debug()
 
@@ -94,13 +117,13 @@ scene.enterScene = (event) =>
   @game_group.y = header
   @view\insert(@game_group)
 
-  @river_group = display.newGroup()
-  @river = River(@river_group, 1)
-  @game_group\insert(@river_group)
+  @level_group = display.newGroup()
+  @level = River(@level_group, 1)
+  @game_group\insert(@level_group)
 
   @player_group = display.newGroup()
-  @player_group\scale(@river.scale, @river.scale)
-  @player = Player(@player_group, @river)
+  @player_group\scale(@level.scale, @level.scale)
+  @player = Player(@player_group, @level)
   @player_group.x = display.contentWidth / 2 - (@player_group.contentWidth / 2)
   @player_group.y = 20
   @game_group\insert(@player_group)
@@ -122,16 +145,19 @@ scene.enterScene = (event) =>
   restart_button\addEventListener('tap', -> storyboard.gotoScene('scenes.menu'))
 
   timer.performWithDelay 1, -> Runtime\addEventListener("enterFrame", scene)
+  if debug_level
+    timer.performWithDelay 1, -> Runtime\addEventListener("touch", @level)
   game.running = true
   @
 
 scene.exitScene = (event) =>
   game.running = false
-  @river_group\removeSelf()
+  @level_group\removeSelf()
   if @debug_group
     @debug_group\removeSelf()
     @debug_group = nil
-  @score_text\removeSelf()
+  if @score_text
+    @score_text\removeSelf()
   @score_text = nil
   @player_group\removeSelf()
   timer.performWithDelay 1, -> Runtime\removeEventListener("enterFrame", scene)

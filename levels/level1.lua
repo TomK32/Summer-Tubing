@@ -1,7 +1,7 @@
 
 return {
   image = 'images/level_1.png',
-  start = {x = 110, y = 20},
+  start = {x = 90, y = 30},
   finish = 1000,
   effects = {
     white_water = {

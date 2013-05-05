@@ -157,6 +157,11 @@ scene.enterScene = (event) =>
   @view\insert(restart_button)
   restart_button\addEventListener('tap', -> storyboard.gotoScene('scenes.menu'))
 
+  debug_switch = display.newText("debug", restart_button.width * 1.1, margin)
+  debug_switch\addEventListener('tap', -> scene.level\debug())
+  @view\insert(debug_switch)
+  debug_switch\toFront()
+
   timer.performWithDelay 1, -> Runtime\addEventListener("enterFrame", scene)
   if debug_level
     timer.performWithDelay 1, -> Runtime\addEventListener("touch", @level)

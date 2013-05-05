@@ -5,8 +5,8 @@ export class Player extends Movable
     Movable.__init(self)
     @group = group
     @level = level
-    self.position.x = level.start.x
-    self.position.y = level.start.y
+    @position.x = level.start.x
+    @position.y = level.start.y
     @create()
     @rotation = 90
     @image\rotate(@rotation)

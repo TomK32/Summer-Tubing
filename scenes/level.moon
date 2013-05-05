@@ -41,7 +41,7 @@ controls.paddle = (side, event) =>
       scene.player\paddle(side, paddle / @slide_height)
     @slide_start[side] = nil
 
-scene.gameLoop = (event) ->
+scene.enterFrame = (event) ->
   if not game.running
     return
   dt = 0.02
@@ -84,12 +84,17 @@ scene.enterScene = (event) =>
   controls\create()
   @view\insert(controls.group)
   @debug()
-  timer.performWithDelay 1, -> Runtime\addEventListener("enterFrame", scene.gameLoop)
+  timer.performWithDelay 1, -> Runtime\addEventListener("enterFrame", scene)
   game.running = true
   @
 
 scene.exitScene = (event) =>
   game.running = false
+  @river_group\removeSelf()
+  if @debug_group
+    @debug_group\removeSelf()
+  @player_group\removeSelf()
+  timer.performWithDelay 1, -> Runtime\removeEventListener("enterFrame", scene)
   storyboard.purgeScene()
 
 scene\addEventListener( "exitScene", scene )

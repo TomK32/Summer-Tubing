@@ -23,7 +23,7 @@ export class River
     @
 
   current: (x, y) =>
-    return({x: -0.1, y: 0.2})
+    return({x: 0, y: 0.2})
 
   collision: (x, y) =>
     y = math.ceil((y + 1) / @collision_map_scaleY)

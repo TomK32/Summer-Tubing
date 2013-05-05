@@ -38,14 +38,20 @@ controls.paddle = (side, event) =>
   elseif event.phase == 'ended'
     paddle = math.abs(@slide_start[side] - event.y) * 5
     if paddle > 0
-      scene.player\paddle(side, paddle / @slide_height)
+      --scene.player\paddle(side, paddle / @slide_height)
+      scene.player\paddle('right', paddle / @slide_height / 10 )
+      scene.player\paddle('left', paddle / @slide_height / 9)
     @slide_start[side] = nil
 
 scene.gameLoop = (event) ->
-  dt = 0.02
   if not game.running
     return
+  dt = 0.02
+
   scene.player\update(dt)
+  if scene.player.collided
+    game.running = false
+    storyboard.gotoScene('scenes.level')
   scene.river\update(dt, scene.player.position)
   if scene.debug_group
     scene\debug()
@@ -54,13 +60,15 @@ scene.gameLoop = (event) ->
 scene.debug = =>
   if not @debug_group
     @debug_group = display.newGroup()
-  
+
     @debug_group.player = display.newText(@player\toString(), 5, 0)
+    @debug_group\setReferencePoint(display.TopLeftReferencePoint)
     @view\insert(@debug_group)
   else
     @debug_group.player.text = @player\toString()
+    @debug_group.player.x = @debug_group.player.width / 2
 
-scene.createScene = (event) =>
+scene.enterScene = (event) =>
   background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
   background\setFillColor(0,0,0,255)
   @view\insert(background)
@@ -87,6 +95,6 @@ scene.exitScene = (event) =>
   storyboard.purgeScene()
 
 scene\addEventListener( "exitScene", scene )
-scene\addEventListener( "createScene", scene )
+scene\addEventListener( "enterScene", scene )
 
 return scene

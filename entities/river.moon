@@ -1,3 +1,5 @@
+require 'entities.white_water'
+
 export class River
   new: (group, level) =>
     @group = group
@@ -13,13 +15,17 @@ export class River
     @image.x = math.floor(@image.contentWidth / 2)
 
     @collision_map = require 'levels.level' .. level .. '_collision'
-    @collision_map_scaleX = @image.width / #@collision_map[1]
-    @collision_map_scaleY = @image.height / #@collision_map
+    @collision_map_scaleX = @image.width / #@collision_map[1] * 0.9
+    @collision_map_scaleY = @image.height / #@collision_map * 0.9
+
+    for i, pos in pairs(@level.effects.white_water or {})
+      white_water = WhiteWater(pos.x, pos.y, pos.width)
+      @group\insert(white_water.group)
 
     @
 
   update: (dt, position) =>
-    @image.y = @image.height / 2 - position.y
+    @group.y = 0 - position.y
     @
 
   current: (x, y) =>

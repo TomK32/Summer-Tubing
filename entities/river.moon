@@ -1,9 +1,33 @@
 export class River
   new: (group, level) =>
     @group = group
-    
-    @image = display.newImage(@group, 'images/level_' .. level .. '.png', 0, 0, true)
+
+    @level = require 'levels.level' .. level
+    assert(@level)
+
+    @start = @level.start
+
+    @image = display.newImage(@group, @level.image, 0, 0, true)
     scale = display.contentWidth / @image.width
     @image\scale(scale, 1)
     @image.x = math.floor(@image.contentWidth / 2)
-  
+
+    @collision_map = require 'levels.level' .. level .. '_collision'
+    @collision_map_scaleX = @image.width / #@collision_map[1]
+    @collision_map_scaleY = @image.height / #@collision_map
+
+    @
+
+  update: (dt) =>
+    @image.y -= dt * 10
+    @
+
+  current: (x, y) =>
+    return({-0.1, 0.2})
+
+  collision: (x, y) =>
+    y = math.ceil((y + 1) / @collision_map_scaleY)
+    if @collision_map[y]
+      x = math.ceil((x + 1) / @collision_map_scaleX)
+      return @collision_map[y][x]
+    return nil

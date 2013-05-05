@@ -46,6 +46,9 @@ scene.gameLoop = (event) ->
   if not game.running
     return
   scene.player\update(dt)
+  scene.river\update(dt)
+  if scene.debug_group
+    scene\debug()
   true
 
 scene.debug = =>
@@ -55,7 +58,7 @@ scene.debug = =>
     @debug_group.player = display.newText(@player\toString(), 5, 0)
     @view\insert(@debug_group)
   else
-    @debug_group.player.text = @player.toString()
+    @debug_group.player.text = @player\toString()
 
 scene.createScene = (event) =>
   background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
@@ -67,8 +70,7 @@ scene.createScene = (event) =>
   @view\insert(@river_group)
 
   @player_group = display.newGroup()
-  @player = Player(@player_group)
-  @player_group.xScale, @player_group.yScale = 0.15, 0.15
+  @player = Player(@player_group, @river)
   @player_group.x = display.contentWidth / 2 - (@player_group.contentWidth / 2)
   @player_group.y = 20
   @view\insert(@player_group)

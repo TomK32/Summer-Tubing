@@ -1,9 +1,12 @@
 require 'entities.movable'
 export class Player extends Movable
 
-  new: (group) =>
+  new: (group, @level) =>
     Movable.__init(self)
     @group = group
+    @level = level
+    self.position.x = level.start.x
+    self.position.y = level.start.y
     @create()
     @
 
@@ -12,6 +15,8 @@ export class Player extends Movable
     @
 
   update: (dt) =>
+    self\move(unpack(@level\current(self.position.x, self.position.y)))
+
     if @spin < 0
       @spin += dt
     elseif @spin > 0
@@ -21,6 +26,7 @@ export class Player extends Movable
     if @spin ~= 0
       @rotation += @spin * dt * 50
       @image\rotate(@spin * dt * 50)
+    @image.x = @position.x / 2
 
   toString: =>
-    return 'x: ' .. @position.x .. ', y: ' .. @position.y .. ', rotation: ' .. @rotation .. ', spin: ' .. @spin
+    return 'x: ' .. math.floor(@position.x) .. ', y: ' .. math.floor(@position.y) .. ', rotation: ' .. math.floor(@rotation*10)/10 .. ', spin: ' .. math.floor(@spin*10)/10

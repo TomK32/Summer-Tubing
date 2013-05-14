@@ -32,7 +32,9 @@ controls.create = =>
   @group\insert(right)
 
   -- connect to player
+  left\addEventListener('tap', left)
   left\addEventListener('touch', left)
+  right\addEventListener('tap', right)
   right\addEventListener('touch', right)
 
 controls.touch = (event) =>
@@ -43,7 +45,7 @@ controls.touch = (event) =>
     1
     -- animate
   elseif event.phase == 'ended' or event.phase == 'cancelled'
-    paddle = math.abs(controls.slide_start[side] - event.y)
+    paddle = math.max(controls.slide_height / 3, math.abs(controls.slide_start[side] - event.y))
     if paddle > 0
       scene.player\paddle(side, paddle / controls.slide_height)
       -- visual feedback about controls

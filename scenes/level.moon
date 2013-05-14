@@ -45,7 +45,7 @@ controls.touch = (event) =>
     1
     -- animate
   elseif event.phase == 'ended' or event.phase == 'cancelled'
-    paddle = math.max(controls.slide_height / 3, math.abs(controls.slide_start[side] - event.y))
+    paddle = math.max(controls.slide_height / 4, math.abs(controls.slide_start[side] - event.y))
     if paddle > 0
       scene.player\paddle(side, paddle / controls.slide_height)
       -- visual feedback about controls
@@ -96,11 +96,17 @@ scene.enterFrame = (event) =>
 
 
 
-  if scene.player.collided
-    game.running = false
-    game.highscores\insert({score: @player.score, date: os.date('%F')})
-    storyboard.gotoScene('scenes.level')
-    return
+  if @player.collided
+    -- find a new position, move the player and subtract a few points for good measure
+    best_x = @level\findBestX(@player.position.y)
+    if best_x
+      @player.collided = false
+      @player.position.x = best_x
+    else
+      game.running = false
+      game.highscores\insert({score: @player.score, date: os.date('%F')})
+      storyboard.gotoScene('scenes.level')
+      return
   @level\update(dt, scene.player.position)
 
   --scene\debug()

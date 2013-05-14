@@ -22,9 +22,9 @@ export class Player extends Movable
     @speed.x -= @speed.x * dt
     @speed.y -= @speed.y * dt
 
-    collision = @level\collision(self.position.x, self.position.y)
+    collision = @level\collision(@position.x, @position.y)
     if collision and collision > 0
-      current = @level\current(self.position.x, self.position.y)
+      current = @level\current(@position.x, @position.y)
       @speed.x = @speed.x + dt * current.x
       @speed.y = @speed.y + dt * current.y
       @move(@speed.x, @speed.y)

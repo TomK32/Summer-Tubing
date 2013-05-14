@@ -58,6 +58,21 @@ export class River
       return @collision_map[y][x]
     return 0
 
+  findBestX: (y) =>
+    best_x = false
+    y = math.ceil(y / @collision_map_scaleY)
+    if not @collision_map[y]
+      return false
+    cur_c = @collision_map[y][1]
+    for x = 1, #@collision_map[y]
+      c = @collision_map[y][x]
+      print(c, cur_c)
+      if c > 255
+        return x * @collision_map_scaleX
+      if c > cur_c or (c == cur_c and math.random() > 0.5)
+        cur_c = c
+        best_x = x
+    return best_x * @collision_map_scaleX
+
   touch: (event) =>
-    print(math.ceil(event.x / @collision_map_scaleY / @scale), math.ceil((math.abs(@group.y/@scale) + event.y) / @collision_map_scaleY), @collision(event.x, @group.y + event.y))
 

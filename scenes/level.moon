@@ -58,6 +58,21 @@ controls.touch = (event) =>
       })
     controls.slide_start[side] = nil
 
+scene.updateClock = =>
+  if not @clock_text
+    -- create a clock view, gets updated from enterFrame
+    @clock_text = display.newText('', display.contentWidth, game.font_size * 1.2, native.systemFontBold, game.font_size)
+    @view\insert(@clock_text)
+    @clock_text\setReferencePoint(display.TopRightReferencePoint)
+  time = math.floor((game.time_remaining / 100))
+  if time < 100 -- show a decimal if less than 10 seconds remain
+    time = math.floor(time) / 10
+  else
+    time = math.floor(time / 10)
+  @clock_text.text = time
+  if @clock_text.width
+    @clock_text.x = display.contentWidth - @clock_text.width / 2
+
 scene.updateScore = =>
   if not @score_text
     -- create a score view, gets updated from enterFrame
@@ -73,6 +88,16 @@ scene.enterFrame = (event) =>
     return
   dt = 0.02
 
+  -- update the remaining time
+  if not game.last_event_time
+    game.last_event_time = event.time
+    game.time_remaining = @level.level.clock * 1000
+  game.time_remaining -= (event.time - game.last_event_time)
+  game.last_event_time = event.time
+
+  if game.time_remaining < 0
+    @endGame()
+    return
   scene.player\update(dt)
   if scene.player.position.y >= @level.finish
 
@@ -118,6 +143,7 @@ scene.enterFrame = (event) =>
   @level\update(dt, scene.player.position)
 
 
+  @updateClock()
   @updateScore()
 
   true

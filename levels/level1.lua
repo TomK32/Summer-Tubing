@@ -3,6 +3,7 @@ return {
   image = 'images/level_1.png',
   start = {x = 90, y = 30},
   finish = 1000, -- pixel, y-value
+  clock = 90, -- seconds
   -- scores are always a bit after the white water
   -- player needs to avoid collision for some time to score
   default_bonus_score = { height = 30, score = 30 },
@@ -24,3 +25,4 @@ return {
     }
   }
 }
+

@@ -94,9 +94,8 @@ scene.enterFrame = (event) =>
     menu_button.y = display.contentHeight * 0.4
     menu_button.x = display.contentWidth / 2
 
-
-
   if @player.collided
+    @player.position.y += 1
     -- find a new position, move the player and subtract a few points for good measure
     best_x = @level\findBestX(@player.position.y)
     if best_x

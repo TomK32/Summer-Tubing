@@ -78,7 +78,7 @@ export class River
       c = @collision_map[y][x]
       if c > 255
         return x * @collision_map_scaleX
-      if c > cur_c or (c == cur_c and math.random() > 0.5)
+      if c > cur_c or (c == cur_c and math.random() > 0.2)
         cur_c = c
         best_x = x
     return best_x * @collision_map_scaleX * @scale

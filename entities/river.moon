@@ -23,7 +23,17 @@ export class River
     for i, pos in pairs(@level.effects.white_water or {})
       white_water = WhiteWater(pos.x, pos.y, pos.width)
       @group\insert(white_water.group)
+
+    @prepareBonusScores()
+
     @
+
+  prepareBonusScores: () =>
+    -- copy in the default values
+    for i,score in ipairs(@level.bonus_scores)
+      for k,v in pairs(@level.default_bonus_score)
+        if score[k] == nil
+          score[k] = v
 
   debug: =>
     if @debug_collision
@@ -66,13 +76,18 @@ export class River
     cur_c = @collision_map[y][1]
     for x = 1, #@collision_map[y]
       c = @collision_map[y][x]
-      print(c, cur_c)
       if c > 255
         return x * @collision_map_scaleX
       if c > cur_c or (c == cur_c and math.random() > 0.5)
         cur_c = c
         best_x = x
     return best_x * @collision_map_scaleX * @scale
+
+  hasBonusScore: (x, y) =>
+    for i, score in ipairs(@level.bonus_scores)
+      if x > score.x and x < score.x + score.width and y > score.y and y < score.y + score.height
+        table.remove(@level.bonus_scores, i)
+        return score.score
 
   touch: (event) =>
 

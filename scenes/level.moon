@@ -102,18 +102,32 @@ scene.enterFrame = (event) =>
     if best_x
       @player.collided = false
       @player.position.x = best_x
+      @player.score -= 10
     else
-      game.running = false
-      game.highscores\insert({score: @player.score, date: os.date('%F')})
-      storyboard.gotoScene('scenes.level')
+      @endGame()
       return
+  else
+    score = @level\hasBonusScore(@player.position.x, @player.position.y)
+    if score
+      bonus_text = display.newText(@view, @player.position.x, @player.position.y, score)
+      transition.to(bonus_text, {
+          x: display.contentWidth, y: game.font_size,
+          time: 200, onComplete: => @removeSelf() })
+
+      @player.score += score
+
   @level\update(dt, scene.player.position)
 
-  --scene\debug()
 
   @updateScore()
 
   true
+
+scene.endGame = =>
+  game.running = false
+  game.highscores\insert({score: @player.score, date: os.date('%F')})
+  storyboard.gotoScene('scenes.level')
+  return true
 
 scene.debug = =>
   if not @debug_group

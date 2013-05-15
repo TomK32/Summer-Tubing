@@ -2,8 +2,8 @@ application = {
 	content = {
 		scale = "letterBox",
 		fps = 60,
-	  width = 320,
-    height = 480,
+	  height = 480,
+    launchpad = false
     --[[
         imageSuffix = {
 		    ["@2x"] = 2,

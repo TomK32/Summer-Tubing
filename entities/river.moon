@@ -52,9 +52,9 @@ export class River
     return({x: 0, y: 0.2})
 
   collision: (x, y) =>
-    y = math.ceil(y / @collision_map_scaleY) + 1
+    y = math.ceil((y / @scale) / @collision_map_scaleY) + 1
     if @collision_map[y]
-      x = math.ceil(x / @collision_map_scaleX) + 1
+      x = math.ceil((x / @scale) / @collision_map_scaleX) + 1
       return @collision_map[y][x]
     return 0
 
@@ -72,7 +72,7 @@ export class River
       if c > cur_c or (c == cur_c and math.random() > 0.5)
         cur_c = c
         best_x = x
-    return best_x * @collision_map_scaleX
+    return best_x * @collision_map_scaleX * @scale
 
   touch: (event) =>
 

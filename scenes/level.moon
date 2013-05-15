@@ -131,7 +131,7 @@ scene.enterScene = (event) =>
   background\setFillColor(0,0,0,255)
   @view\insert(background)
 
-  header = math.min(32, display.contentHeight * 0.1)
+  header = game.font_size * 2.6
 
   @game_group = display.newGroup()
   @game_group.y = header
@@ -140,22 +140,15 @@ scene.enterScene = (event) =>
   @level_group = display.newGroup()
   @level = River(@level_group, 1)
   @game_group\insert(@level_group)
-
   @player_group = display.newGroup()
-  @player_group\scale(@level.scale, @level.scale)
+  @player_group\scale(@level.scale/2, @level.scale/2)
   @player = Player(@player_group, @level)
-  @player_group.x = display.contentWidth / 2 - (@player_group.contentWidth / 2)
-  @player_group.y = 20
   @game_group\insert(@player_group)
 
   controls\create()
   @game_group\insert(controls.group)
 
   -- header
-  background = display.newRect(0, 0, display.contentWidth, header)
-  background\setFillColor(0,0,0,255)
-  @view\insert(background)
-
   margin = 0
   restart_button = display.newImage('images/restart.png', margin, margin)
   restart_button\scale(header / restart_button.height, header / restart_button.height)

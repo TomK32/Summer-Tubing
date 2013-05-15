@@ -1,6 +1,10 @@
 
 
 settings = {
+  orientation = {
+    default = "landscapeRight",
+    supported = { "landscapeLeft", "landscapeRight" }
+  },
   android =
    {
     versionCode = "VERSION",

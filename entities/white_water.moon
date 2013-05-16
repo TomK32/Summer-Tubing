@@ -17,6 +17,8 @@ export class WhiteWater
     for i=1, @count
       @images +=1
       image = display.newImage(WhiteWater.image, math.ceil(math.random() * @width), 0, 10, 3)
+      if math.random() > 0.8
+        image.blendMode = 'multiply'
       @group\insert(image)
       transition.from(image, {time: 400, alpha: 0, transition: easing.inQuad})
       transition.to(image, {delay: 2600, time: 400, alpha: 0, transition: easing.inQuad})

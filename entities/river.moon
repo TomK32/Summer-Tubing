@@ -5,7 +5,7 @@ export class River
     @group = group
     @debug_collision = false
 
-    @level = require 'levels.level' .. level
+    @level = require 'levels.level_' .. level
     assert(@level)
     @scale = display.contentWidth / @level.width
 
@@ -17,7 +17,7 @@ export class River
 
     @group\scale(@scale, @scale)
 
-    @collision_map = require 'levels.level' .. level .. '_collision'
+    @collision_map = require 'levels.level_' .. level .. '_collision'
     @collision_map_scaleX = @level.width / #@collision_map[1]
     @collision_map_scaleY = @collision_map_scaleX
 

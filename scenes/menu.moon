@@ -1,8 +1,17 @@
 
 scene = storyboard.newScene('Menu')
 widget = require "widget"
+require 'entities.river'
 
 scene.enterScene = (event) =>
+
+  @background_group = display.newGroup()
+  level = River(@background_group, 'menu')
+  @view\insert(@background_group)
+  --  @background_image = display.newImage(@view, 'images/level_1.png', 0, 0)
+  --scale = display.contentWidth / @background_image.width
+  --@background_image\scale(scale, scale)
+
 
   y = display.contentHeight / 5
 

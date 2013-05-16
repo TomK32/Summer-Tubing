@@ -135,6 +135,7 @@ scene.enterFrame = (event) =>
 
 scene.endGame = =>
   @end_game_group = display.newGroup()
+  @player.score += math.floor(game.time_remaining/1000) * 10
   game.highscores\insert({score: @player.score, date: os.date('%F')})
   game.running = false
 

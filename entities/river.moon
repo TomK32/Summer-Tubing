@@ -71,7 +71,7 @@ export class River
 
   findBestX: (y) =>
     best_x = false
-    y = math.ceil(y / @collision_map_scaleY)
+    y = math.ceil((y/@scale) / @collision_map_scaleY)
     if not @collision_map[y]
       return false
     cur_c = @collision_map[y][1]

@@ -23,7 +23,7 @@ analytics.archiveEvents = true
 analytics.newEvent("design", {event_id: "loading"})
 
 export game = {
-  font_size: 16
+  font_size: display.contentHeight / 20
   level: 0
   lvlString: ->
     string.format('%4.i', game.level)

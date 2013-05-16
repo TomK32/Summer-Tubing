@@ -10,7 +10,7 @@ require 'entities.player'
 require 'entities.river'
 
 controls = {
-  slide_width: math.max(10, display.contentWidth / 8)
+  slide_width: math.max(10, display.contentWidth / 16)
   slide_height: math.max(100, display.contentHeight / 4)
   slides_y: display.contentHeight - 40
   slide_color: {200, 200, 200, 255}
@@ -19,11 +19,11 @@ controls = {
 
 controls.create = =>
   @group = display.newGroup()
-  left = display.newRect( 8, @slides_y - @slide_height, @slide_width, @slide_height)
+  left = display.newRect( @slide_width * 0.5, @slides_y - @slide_height, @slide_width, @slide_height)
   left.side = 'left'
   left.touch = controls.touch
   left\setFillColor(255,255,255,255)
-  right = display.newRect( display.contentWidth - @slide_width - 8, @slides_y - @slide_height, @slide_width, @slide_height)
+  right = display.newRect( display.contentWidth - @slide_width * 1.5, @slides_y - @slide_height, @slide_width, @slide_height)
   right.side = 'right'
   right.touch = controls.touch
   right\setFillColor(unpack(@slide_color))
@@ -100,25 +100,9 @@ scene.enterFrame = (event) =>
     @endGame()
     return
   scene.player\update(dt)
+
   if scene.player.position.y >= @level.finish
-
-    game.highscores\insert({score: @player.score, date: os.date('%F')})
-    game.running = false
-
-    background = display.newRect(display.contentWidth * 0.05, display.contentHeight * 0.1, display.contentWidth * 0.9, display.contentHeight * 0.8)
-    background\setFillColor(0,0,0,200)
-    @view\insert(background)
-    menu_button = widget.newButton({
-      label: "Go To Menu",
-      labelColor: { default: {0}, over: {0} },
-      onRelease: (event) ->
-        storyboard.gotoScene("scenes.menu", "fade", 50)
-        analytics.newEvent("design", {event_id: "game:end"})
-        return true
-    })
-    @view\insert(menu_button)
-    menu_button.y = display.contentHeight * 0.4
-    menu_button.x = display.contentWidth / 2
+    @endGame()
 
   if @player.collided
     @player.position.y += 1
@@ -134,10 +118,10 @@ scene.enterFrame = (event) =>
   else
     score = @level\hasBonusScore(@player.position.x, @player.position.y)
     if score
-      bonus_text = display.newText(@view, @player.position.x, @player.position.y, score)
+      bonus_text = display.newText(@game_group, @player.position.x, @player.position.y, score, native.systemFontBold, game.font_size)
       transition.to(bonus_text, {
-          x: display.contentWidth, y: game.font_size,
-          time: 200, onComplete: => @removeSelf() })
+          x: display.contentWidth, y: -@game_group.y + game.font_size,
+          time: 1000, onComplete: => @removeSelf() })
 
       @player.score += score
 
@@ -150,9 +134,38 @@ scene.enterFrame = (event) =>
   true
 
 scene.endGame = =>
-  game.running = false
   game.highscores\insert({score: @player.score, date: os.date('%F')})
-  storyboard.gotoScene('scenes.level')
+  game.running = false
+
+  background = display.newRect(display.contentWidth * 0.05, display.contentHeight * 0.2, display.contentWidth * 0.9, display.contentHeight * 0.6)
+  background\setFillColor(0,0,0,200)
+  @view\insert(background)
+  y = display.contentHeight * 0.4
+  center = display.contentWidth / 2
+  menu_button = widget.newButton({
+    label: "Go To Menu",
+    labelColor: { default: {0}, over: {0} },
+    top: y,
+    onRelease: (event) ->
+      storyboard.gotoScene("scenes.menu", "fade", 50)
+      analytics.newEvent("design", {event_id: "game:end"})
+      return true
+  })
+  @view\insert(menu_button)
+  menu_button.x = center
+  y += menu_button.height * 1.2
+
+  replay_button = widget.newButton({
+    label: "Play again",
+    top: y,
+    labelColor: { default: {0}, over: {0} },
+    onRelease: (event) ->
+      storyboard.gotoScene('scenes.level', "fade", 100)
+      analytics.newEvent("design", {event_id: "level:end"})
+      return true
+  })
+  replay_button.x = center
+  @view\insert(replay_button)
   return true
 
 scene.debug = =>
@@ -171,7 +184,7 @@ scene.enterScene = (event) =>
   background\setFillColor(0,0,0,255)
   @view\insert(background)
 
-  header = game.font_size * 2.6
+  header = game.font_size * 2
 
   @game_group = display.newGroup()
   @game_group.y = header + display.contentHeight / 3
@@ -189,7 +202,7 @@ scene.enterScene = (event) =>
   @view\insert(controls.group)
 
   -- header
-  margin = 0
+  margin = 2
   restart_button = display.newImage('images/restart.png', margin, margin)
   restart_button\scale(header / restart_button.height, header / restart_button.height)
   restart_button.y = header / 2
@@ -197,7 +210,7 @@ scene.enterScene = (event) =>
   @view\insert(restart_button)
   restart_button\addEventListener('tap', -> storyboard.gotoScene('scenes.menu'))
 
-  debug_switch = display.newText("debug", restart_button.width * 1.1, margin)
+  debug_switch = display.newText("debug", restart_button.width * 1.4, margin, native.systemFontBold, game.font_size*0.8)
   debug_switch\addEventListener('tap', -> scene.level\debug())
   @view\insert(debug_switch)
   debug_switch\toFront()

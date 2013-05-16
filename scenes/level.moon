@@ -69,7 +69,8 @@ scene.updateClock = =>
     time = math.floor(time) / 10
   else
     time = math.floor(time / 10)
-  @clock_text.text = time
+  progress = math.floor(((@player.position.y - @level.start.y) / (@level.finish - @level.start.y)) * 100)
+  @clock_text.text = time .. ' | ' .. string.format('%4.f', progress) .. '%'
   if @clock_text.width
     @clock_text.x = display.contentWidth - @clock_text.width / 2
 
@@ -79,8 +80,7 @@ scene.updateScore = =>
     @score_text = display.newText('', display.contentWidth, 0, native.systemFontBold, game.font_size)
     @view\insert(@score_text)
     @score_text\setReferencePoint(display.TopRightReferencePoint)
-  progress = math.ceil(((@player.position.y - @level.start.y) / (@level.finish - @level.start.y)) * 100)
-  @score_text.text = math.floor(@player.score) .. ' | ' .. progress .. '%'
+  @score_text.text = math.floor(@player.score)
   if @score_text.width
     @score_text.x = display.contentWidth - @score_text.width / 2
 
@@ -118,9 +118,9 @@ scene.enterFrame = (event) =>
   else
     score = @level\hasBonusScore(@player.position.x, @player.position.y)
     if score
-      bonus_text = display.newText(@game_group, @player.position.x, @player.position.y, score, native.systemFontBold, game.font_size)
+      bonus_text = display.newText(score, @player_group.x, @game_group.y, native.systemFontBold, game.font_size)
       transition.to(bonus_text, {
-          x: display.contentWidth, y: -@game_group.y + game.font_size,
+          x: display.contentWidth - game.font_size, y: game.font_size / 2,
           time: 1000, onComplete: => @removeSelf() })
 
       @player.score += score
@@ -134,12 +134,14 @@ scene.enterFrame = (event) =>
   true
 
 scene.endGame = =>
+  @end_game_group = display.newGroup()
   game.highscores\insert({score: @player.score, date: os.date('%F')})
   game.running = false
 
   background = display.newRect(display.contentWidth * 0.05, display.contentHeight * 0.2, display.contentWidth * 0.9, display.contentHeight * 0.6)
   background\setFillColor(0,0,0,200)
-  @view\insert(background)
+  @end_game_group\insert(background)
+
   y = display.contentHeight * 0.4
   center = display.contentWidth / 2
   menu_button = widget.newButton({
@@ -151,7 +153,7 @@ scene.endGame = =>
       analytics.newEvent("design", {event_id: "game:end"})
       return true
   })
-  @view\insert(menu_button)
+  @end_game_group\insert(menu_button)
   menu_button.x = center
   y += menu_button.height * 1.2
 
@@ -165,7 +167,8 @@ scene.endGame = =>
       return true
   })
   replay_button.x = center
-  @view\insert(replay_button)
+  @end_game_group\insert(replay_button)
+  @view\insert(@end_game_group)
   return true
 
 scene.debug = =>
@@ -183,6 +186,8 @@ scene.enterScene = (event) =>
   background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
   background\setFillColor(0,0,0,255)
   @view\insert(background)
+  if @end_game_group
+    @end_game_group\removeSelf()
 
   header = game.font_size * 2
 
@@ -229,7 +234,10 @@ scene.exitScene = (event) =>
     @debug_group = nil
   if @score_text
     @score_text\removeSelf()
-  @score_text = nil
+    @score_text = nil
+  if @clock_text
+    @clock_text\removeSelf()
+    @clock_text = nil
   @player_group\removeSelf()
   timer.performWithDelay 1, -> Runtime\removeEventListener("enterFrame", scene)
   storyboard.purgeScene()

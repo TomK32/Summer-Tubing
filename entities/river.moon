@@ -26,15 +26,22 @@ export class River
       @group\insert(white_water.group)
 
     @prepareBonusScores()
+    @renderBonusScores()
 
     @
 
-  prepareBonusScores: () =>
+  prepareBonusScores: =>
     -- copy in the default values
-    for i,score in ipairs(@level.bonus_scores)
-      for k,v in pairs(@level.default_bonus_score)
+    for i, score in ipairs(@level.bonus_scores)
+      for k, v in pairs(@level.default_bonus_score)
         if score[k] == nil
           score[k] = v
+
+  renderBonusScores: =>
+    for i, score in ipairs(@level.bonus_scores)
+      score.score_text = display.newText(@group, score.score .. '', 0, score.y, native.systemFontBold, game.font_size/@scale)
+      score.score_text.x = score.x + score.width / 2 - score.score_text.width / 2
+      score.score_text\setTextColor(255, 200, 0, 255)
 
   debug: =>
     if @debug_collision
@@ -89,6 +96,8 @@ export class River
     y = y / @scale
     for i, score in ipairs(@level.bonus_scores)
       if x > score.x and x < score.x + score.width and y > score.y and y < score.y + score.height
+        if score.score_text
+          score.score_text\removeSelf()
         table.remove(@level.bonus_scores, i)
         return score.score
 

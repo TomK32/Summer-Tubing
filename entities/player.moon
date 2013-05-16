@@ -16,8 +16,8 @@ export class Player extends Movable
 
   create: =>
     @image = display.newImage(@group, 'images/player.png', 0, 0)
-    @image.x = - @image.width / 2
-    @image.y = - @image.height / 2
+    @image.x = -@image.width / 2
+    @image.y = -@image.height / 2
     @
 
   update: (dt) =>

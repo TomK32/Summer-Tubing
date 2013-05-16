@@ -12,6 +12,7 @@ export class Player extends Movable
     @image\rotate(@rotation)
     @collided = false
     @score = 0
+    @scores = {} -- e.g. {{10, "jump"}}
     @
 
   create: =>
@@ -42,6 +43,11 @@ export class Player extends Movable
       @image\rotate(spin)
     @group.x = @position.x
     @
+
+  addScore: (score, for_what) =>
+    @score += score
+    table.insert(@scores, {score, for_what})
+    return score
 
   toString: =>
     return 'x: ' .. math.floor(@position.x) .. ', y: ' .. math.floor(@position.y) .. ', rot: ' .. math.floor(@rotation) .. ', spin: ' .. math.floor(@spin*10)/10 .. ', s_x: ' .. math.floor(@speed.x*10)/10 .. ', s_y:' .. math.floor(@speed.y*10)/10

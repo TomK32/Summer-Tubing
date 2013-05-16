@@ -111,7 +111,7 @@ scene.enterFrame = (event) =>
     if best_x
       @player.collided = false
       @player.position.x = best_x
-      @player.score -= 10
+      @player\addScore( -10, 'Collsion')
     else
       @endGame()
       return
@@ -123,7 +123,7 @@ scene.enterFrame = (event) =>
           x: display.contentWidth - game.font_size, y: game.font_size / 2,
           time: 1000, onComplete: => @removeSelf() })
 
-      @player.score += score
+      @player\addScore(score, 'Bonus')
 
   @level\update(dt, scene.player.position)
 
@@ -135,16 +135,26 @@ scene.enterFrame = (event) =>
 
 scene.endGame = =>
   @end_game_group = display.newGroup()
-  @player.score += math.floor(game.time_remaining/1000) * 10
+  @player\addScore(math.floor(game.time_remaining/1000) * 10, 'Time left')
   game.highscores\insert({score: @player.score, date: os.date('%F')})
   game.running = false
 
-  background = display.newRect(display.contentWidth * 0.05, display.contentHeight * 0.2, display.contentWidth * 0.9, display.contentHeight * 0.6)
+  background = display.newRect(display.contentWidth * 0.05, display.contentHeight * 0.15, display.contentWidth * 0.9, display.contentHeight * 0.7)
   background\setFillColor(0,0,0,200)
   @end_game_group\insert(background)
 
+  -- print out what the player did get a score for
+  y = display.contentHeight * 0.2
+  x = display.contentWidth * 0.2
+  for i, score in ipairs(@player.scores)
+    if y < display.contentHeight * 0.75
+      score, for_what = unpack(score)
+      display.newText(@end_game_group, score, x, y, native.systemFontBold, game.font_size)
+      display.newText(@end_game_group, for_what, x * 2, y, native.systemFontBold, game.font_size)
+      y += game.font_size * 1.2
+
   y = display.contentHeight * 0.4
-  center = display.contentWidth / 2
+  center = display.contentWidth * 0.75
   menu_button = widget.newButton({
     label: "Go To Menu",
     labelColor: { default: {0}, over: {0} },

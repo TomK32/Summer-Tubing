@@ -1,7 +1,10 @@
 
 return {
-  image = 'images/level_1.png',
-  start = {x = 90, y = 30},
+  images = {
+    {x = 0, y = 0, file = 'images/level_1.png'},
+  },
+  width = 320, -- usually width of your level images
+  start = {x = 120, y = 80},
   finish = 1000, -- pixel, y-value
   clock = 90, -- seconds
   -- scores are always a bit after the white water

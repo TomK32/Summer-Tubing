@@ -7,9 +7,10 @@ export class River
 
     @level = require 'levels.level' .. level
     assert(@level)
+    @scale = display.contentWidth / @level.width
 
-    @image = display.newImage(@group, @level.image, 0, 0, true)
-    @scale = display.contentWidth / @image.width
+    for i, image in ipairs(@level.images)
+      image = display.newImage(@group, image.file, image.x * @scale, image.y * @scale, true)
 
     @start = { x: @level.start.x * @scale, y: @level.start.y * @scale}
     @finish = @level.finish * @scale
@@ -17,8 +18,8 @@ export class River
     @group\scale(@scale, @scale)
 
     @collision_map = require 'levels.level' .. level .. '_collision'
-    @collision_map_scaleX = @image.width / #@collision_map[1]
-    @collision_map_scaleY = @image.height / #@collision_map
+    @collision_map_scaleX = @level.width / #@collision_map[1]
+    @collision_map_scaleY = @collision_map_scaleX
 
     for i, pos in pairs(@level.effects.white_water or {})
       white_water = WhiteWater(pos.x, pos.y, pos.width)
@@ -59,7 +60,7 @@ export class River
     @
 
   current: (x, y) =>
-    return({x: 0, y: 0.2})
+    return({x: 0 * @scale, y: 0.2 * @scale})
 
   collision: (x, y) =>
     y = math.ceil((y / @scale) / @collision_map_scaleY) + 1
@@ -84,10 +85,10 @@ export class River
     return best_x * @collision_map_scaleX * @scale
 
   hasBonusScore: (x, y) =>
+    x = x / @scale
+    y = y / @scale
     for i, score in ipairs(@level.bonus_scores)
       if x > score.x and x < score.x + score.width and y > score.y and y < score.y + score.height
         table.remove(@level.bonus_scores, i)
         return score.score
-
-  touch: (event) =>
 

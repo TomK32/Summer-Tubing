@@ -79,7 +79,8 @@ scene.updateScore = =>
     @score_text = display.newText('', display.contentWidth, 0, native.systemFontBold, game.font_size)
     @view\insert(@score_text)
     @score_text\setReferencePoint(display.TopRightReferencePoint)
-  @score_text.text = math.floor(@player.score)
+  progress = math.ceil(((@player.position.y - @level.start.y) / (@level.finish - @level.start.y)) * 100)
+  @score_text.text = math.floor(@player.score) .. ' | ' .. progress .. '%'
   if @score_text.width
     @score_text.x = display.contentWidth - @score_text.width / 2
 
@@ -173,7 +174,7 @@ scene.enterScene = (event) =>
   header = game.font_size * 2.6
 
   @game_group = display.newGroup()
-  @game_group.y = header
+  @game_group.y = header + display.contentHeight / 3
   @view\insert(@game_group)
 
   @level_group = display.newGroup()
@@ -185,7 +186,7 @@ scene.enterScene = (event) =>
   @game_group\insert(@player_group)
 
   controls\create()
-  @game_group\insert(controls.group)
+  @view\insert(controls.group)
 
   -- header
   margin = 0

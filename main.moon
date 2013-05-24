@@ -5,19 +5,18 @@
 system.activate( "multitouch" )
 
 -- Commented out for contest
---require 'lib.game_analytics'
-GameAnalytics = {}
--- GameAnalytics.newEventWithoutDelay = GameAnalytics.newEvent
-GameAnalytics.newEvent = (category, ...) ->
-  opts = ...
-  timer.performWithDelay 1, ->
-    --analytics.newEventWithoutDelay(category, opts)
-
+require 'lib.game_analytics'
+GameAnalytics.newEventWithoutDelay = GameAnalytics.newEvent
 export analytics = GameAnalytics
 analytics.isDebug = false
 analytics.submitSystemInfo = true
 analytics.archiveEvents = true
---analytics.init(require('conf.analytics'))
+analytics.init(require('conf.analytics'))
+
+GameAnalytics.newEvent = (category, ...) ->
+  opts = ...
+  timer.performWithDelay 1, ->
+    analytics.newEventWithoutDelay(category, opts)
 
 -- log events
 analytics.newEvent("design", {event_id: "loading"})

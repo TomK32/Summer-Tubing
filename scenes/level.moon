@@ -219,7 +219,7 @@ scene.enterScene = (event) =>
 
   -- header
   margin = 2
-  restart_button = display.newImage('images/restart.png', margin, margin)
+  restart_button = display.newText('menu', margin, margin, native.systemFontBold, game.font_size)
   restart_button\scale(header / restart_button.height, header / restart_button.height)
   restart_button.y = header / 2
   restart_button.x = header / 2
